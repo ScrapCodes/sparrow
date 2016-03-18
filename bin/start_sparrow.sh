@@ -27,7 +27,7 @@ fi
 
 # -XX:MaxGCPauseMillis=3 
 # removed nice -n -20
-nohup java -XX:+UseConcMarkSweepGC -Xmx2046m -cp ./target/sparrow-1.0-SNAPSHOT.jar edu.berkeley.sparrow.daemon.SparrowDaemon -c $SPARROW_HOME/bin/sparrow.conf > $LOG 2>&1 &
+nohup java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -XX:+UseConcMarkSweepGC -Xmx2046m -cp ./conf:./target/sparrow-1.0-SNAPSHOT.jar edu.berkeley.sparrow.daemon.SparrowDaemon -c $SPARROW_HOME/bin/sparrow.conf > $LOG 2>&1 &
 PID=$!
 echo "Logging to $LOG"
 sleep 1

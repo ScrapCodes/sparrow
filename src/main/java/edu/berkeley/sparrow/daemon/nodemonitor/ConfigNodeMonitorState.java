@@ -34,13 +34,11 @@ public class ConfigNodeMonitorState implements NodeMonitorState {
   private Set<InetSocketAddress> nodeMonitors;
   private String staticAppId;
 
-  @Override
   public void initialize(Configuration conf) {
     nodeMonitors = ConfigUtil.parseBackends(conf);
     staticAppId = conf.getString(SparrowConf.STATIC_APP_NAME);
   }
 
-  @Override
   public boolean registerBackend(String appId, InetSocketAddress nodeMonitor) {
     // Verify that the given backend information matches the static configuration.
     if (!appId.equals(staticAppId)) {

@@ -19,6 +19,8 @@ package edu.berkeley.sparrow.daemon.util;
 import java.io.IOException;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 import org.apache.log4j.FileAppender;
@@ -32,7 +34,7 @@ public class Logging {
   public final static String AUDIT_LOGGER_NAME = "audit";
   public final static String AUDIT_LOG_FILENAME_FORMAT = "sparrow_audit.%d.%d.log";
   public final static String AUDIT_LOG_FORMAT = "%c\t%m%n";
-
+  private final static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
   private static Joiner paramJoiner = Joiner.on(",").useForNull("null");
   private static Joiner auditParamJoiner = Joiner.on("\t");
   private static Joiner auditEventParamJoiner = Joiner.on(":");
@@ -94,7 +96,9 @@ public class Logging {
    * Returns a log string for the given event, starting with the epoch time.
    */
   public static String auditEventString(Object... params) {
-    return auditParamJoiner.join(System.currentTimeMillis(),
+    Date d = new Date(System.currentTimeMillis());
+    String dateStr = sdf.format(d);
+    return auditParamJoiner.join(dateStr,
         auditEventParamJoiner.join(params));
   }
 

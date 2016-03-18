@@ -24,10 +24,7 @@ import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TNonblockingServer;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadedSelectorServer;
-import org.apache.thrift.transport.TFramedTransport;
-import org.apache.thrift.transport.TNonblockingServerSocket;
-import org.apache.thrift.transport.TNonblockingServerTransport;
-import org.apache.thrift.transport.TTransportException;
+import org.apache.thrift.transport.*;
 
 /***
  * Helper functions for dispatching Thrift servers.
@@ -52,6 +49,7 @@ public class TServers {
     }
     TNonblockingServer.Args serverArgs = new TNonblockingServer.Args(serverTransport);
     serverArgs.processor(processor);
+    serverArgs.transportFactory(new TFramedTransport.Factory(1024 * 1024 * 1024));
     TServer server = new TNonblockingServer(serverArgs);
     new Thread(new TServerRunnable(server)).start();
   }
@@ -72,7 +70,7 @@ public class TServers {
       throw new IOException(e);
     }
     TThreadedSelectorServer.Args serverArgs = new TThreadedSelectorServer.Args(serverTransport);
-    serverArgs.transportFactory(new TFramedTransport.Factory());
+    serverArgs.transportFactory(new TFramedTransport.Factory(1024 * 1024 * 1024));
     serverArgs.protocolFactory(new TBinaryProtocol.Factory());
     serverArgs.processor(processor);
     serverArgs.selectorThreads(SELECTOR_THREADS);
